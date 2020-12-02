@@ -94,7 +94,7 @@ const stringSplit = (string, separator) => {
   );
 };
 
-console.log(stringSplit('02/20/20202', '/'));
+console.log(stringSplit('02/20/2020', '/'));
 
 /* 6. Fibonacci 
    Write a recursive function that prints the Fibonacci sequence of a given number. 
@@ -187,6 +187,9 @@ function traverseMaze(maze, x = 0, y = 0) {
 
 // console.log(traverseMaze(maze));
 
+// Build off of previous function
+// Find a way to know which path we went before
+
 /* 9. Find ALL the ways out of the maze 
    Use the above maze and modify your solution so it finds All the possible exit paths through the Maze. 
    To find all possible exit paths through the maze, think about how many places you can move at each turn. Possibly up, down, left or right?
@@ -198,6 +201,34 @@ function traverseMaze(maze, x = 0, y = 0) {
    Path to the exit: RRDDRRUURRDDDD
    Path to the exit: RRDDRRRRDD
 */
+
+function findPaths(maze, x = 0, y = 0, steps = [], solutions = []) {
+  if (x < 0 || x >= maze.length || y < 0 || y >= maze[x].length) {
+    return solutions;
+  }
+  const current = maze[x][y];
+  if (current === 'e') {
+    return [...solutions, steps];
+  } else if (current === '*') {
+    return solutions;
+  } else if (current === 'v') {
+    return solutions;
+  }
+  const newMaze = maze.map((row, xIndex) =>
+    row.map((value, yIndex) => {
+      if (xIndex === x && yIndex === y) {
+        return 'v';
+      } else {
+        return value;
+      }
+    })
+  );
+  solutions = findPaths(newMaze, x - 1, y, [...steps, 'U'], solutions);
+  solutions = findPaths(newMaze, x + 1, y, [...steps, 'D'], solutions);
+  solutions = findPaths(newMaze, x, y - 1, [...steps, 'L'], solutions);
+  solutions = findPaths(newMaze, x, y + 1, [...steps, 'R'], solutions);
+  return solutions;
+}
 
 /* 10. Anagrams 
    An anagram is any word or phrase that uses the letters of a given ("subject") word or phrase in another, rearranged order. 
@@ -368,3 +399,18 @@ const toBinary = n => {
 // console.log(toBinary(-3)); // Abs value 11
 // console.log(toBinary(0)); // 0
 // console.log(toBinary(1)); // 1
+
+function twoNumberSum(array, targetSum) {
+  let target = [];
+  for (let i = 0; i < array.length; i++) {
+    for (let j = 0; j < array.length; j++) {
+      let newSum = array[i] + array[j];
+      if (newSum === targetSum) {
+        target.push(newSum);
+      } else {
+        return target;
+      }
+    }
+    return target;
+  }
+}
